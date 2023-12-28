@@ -1,6 +1,6 @@
-import {map, flatten} from '../utils/helpers';
-import CSSPropertyOperations from 'react/lib/CSSPropertyOperations';
-import { canUseDOM } from 'react/lib/ExecutionEnvironment';
+import { flatten, mapObject } from '../utils/helpers';
+import CSSPropertyOperations from 'react-dom/lib/CSSPropertyOperations';
+import { canUseDOM } from 'exenv';
 import animations from '../style/animations';
 
 let styleElement;
@@ -35,23 +35,28 @@ function updateStore(styleId, style, pseudoClass, disabled) {
  * Constructs all the stored styles & injects them to the DOM.
  */
 function createMarkupOnPseudoClass(pseudoClasses, id, disabled) {
-  return map(pseudoClasses, (style, pseudoClass) => {
-    const styleString = CSSPropertyOperations.createMarkupForStyles(style);
-    const styleWithImportant = styleString.replace(/;/g, ' !important;');
+  return mapObject(pseudoClasses, (style, pseudoClass) => {
+    if (style && Object.keys(style).length > 0) {
+      const styleString = CSSPropertyOperations.createMarkupForStyles(style);
+      const styleWithImportant = styleString.replace(/;/g, ' !important;');
 
-    return disabled ?
+      return disabled ?
         `.${id}[disabled]:${pseudoClass} {${styleWithImportant}}` :
         `.${id}:${pseudoClass} {${styleWithImportant}}`;
+    }
+
+    return undefined;
   });
 }
 
 function updateStyling() {
-  const styles = map(styleStorage, (storageEntry, id) => {
+  const styles = mapObject(styleStorage, (storageEntry, id) => {
     const pseudoClassesArray = [];
 
     if (storageEntry.pseudoClasses) {
       pseudoClassesArray.push(createMarkupOnPseudoClass(storageEntry.pseudoClasses, id, false));
     }
+
     if (storageEntry.disabledPseudoClasses) {
       pseudoClassesArray.push(createMarkupOnPseudoClass(storageEntry.disabledPseudoClasses, id, true));
     }
@@ -109,7 +114,7 @@ export function removeAllStyles(styleIds) {
 /**
  * Injects a style tag and adds the passed style for the provided pseudoClass.
  */
-export default function(styleId, style, pseudoClass, disabled) {
+export default function (styleId, style, pseudoClass, disabled) {
   injectStyleTag();
   updateStore(styleId, style, pseudoClass, disabled);
   updateStyling();

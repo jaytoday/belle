@@ -1,5 +1,4 @@
 const selectStyle = {
-
   style: {
     borderBottom: '1px solid #CCC',
     boxSizing: 'border-box',
@@ -33,30 +32,34 @@ const selectStyle = {
     Prevent flickering while tapping on WebKit
     http://stackoverflow.com/a/3516243/837709
     */
-    WebkitTapHighlightColor: 'transparent'
+    WebkitTapHighlightColor: 'transparent',
   },
 
   focusStyle: {
-    borderBottom: '1px solid #6EB8D4'
+    borderBottom: '1px solid #6EB8D4',
+  },
+
+  activeStyle: {
+    borderBottom: '1px solid #6EB8D4',
   },
 
   hoverStyle: {
-    borderBottom: '1px solid #92D6EF'
+    borderBottom: '1px solid #92D6EF',
   },
 
   wrapperStyle: {
     outline: 0, // to avoid default focus behaviour
     boxSizing: 'border-box',
-    position: 'relative'
+    position: 'relative',
   },
 
   disabledStyle: {
-    borderBottom: '1px dotted #9F9F9F'
+    borderBottom: '1px dotted #9F9F9F',
   },
 
   disabledHoverStyle: {
     borderBottom: '1px dotted #92D6EF',
-    cursor: 'not-allowed'
+    cursor: 'not-allowed',
   },
 
   menuStyle: {
@@ -74,37 +77,36 @@ const selectStyle = {
     borderTop: '1px solid #f2f2f2',
     top: 0,
     /* Improve scrolling for mobile Safari */
-    WebkitOverflowScrolling: 'touch'
+    WebkitOverflowScrolling: 'touch',
   },
 
   caretToOpenStyle: {
     height: 0,
     width: 0,
-    content: ' ',
+    content: '-', // Avoid this warning: was passed a numeric string value for CSS property `content` (value: ` `)
     position: 'absolute',
     top: 15,
     right: 8,
     borderTop: '6px solid #666',
     borderLeft: '5px solid transparent',
-    borderRight: '5px solid transparent'
+    borderRight: '5px solid transparent',
   },
 
   caretToCloseStyle: {
     height: 0,
     width: 0,
-    content: ' ',
+    content: '-', // Avoid this warning: was passed a numeric string value for CSS property `content` (value: ` `)
     position: 'absolute',
     top: 15,
     right: 8,
     borderBottom: '6px solid #666',
     borderLeft: '5px solid transparent',
-    borderRight: '5px solid transparent'
+    borderRight: '5px solid transparent',
   },
 
   disabledCaretToOpenStyle: {
-    borderTop: '6px solid #9F9F9F'
-  }
-
+    borderTop: '6px solid #9F9F9F',
+  },
 };
 
 export default selectStyle;

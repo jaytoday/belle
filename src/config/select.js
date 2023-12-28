@@ -1,6 +1,8 @@
-import React from 'react';
+import ReactDOM from 'react-dom';
 import isComponentOfType from '../utils/is-component-of-type.js';
-import {filter, findIndex} from '../utils/helpers';
+import { filterReactChildren, findIndex } from '../utils/helpers';
+import Option from '../components/Option';
+import Separator from '../components/Separator';
 
 /**
  * Returns the index of the entry with a certain value from the component's
@@ -9,10 +11,11 @@ import {filter, findIndex} from '../utils/helpers';
  * The index search includes separator & option components.
  */
 const findIndexOfSelectedOption = (component) => {
-  const filterFunction = (child) => (isComponentOfType('Belle Option', child) || isComponentOfType('Belle Separator', child));
-  return findIndex(filter(component.props.children, filterFunction), (element) => {
-    return element.props.value === component.state.selectedValue;
-  });
+  const filterFunction = (child) => (isComponentOfType(Option, child) || isComponentOfType(Separator, child));
+  return findIndex(filterReactChildren(
+    component.props.children, filterFunction),
+    (element) => (element.props.value === component.state.selectedValue)
+  );
 };
 
 const selectConfig = {
@@ -26,31 +29,30 @@ const selectConfig = {
    * @param selectComponent {object} - the Select component itself accessible with `this`
    */
   positionOptions(selectComponent) {
-    const menuNode = React.findDOMNode(selectComponent.refs.menu);
+    const menuNode = ReactDOM.findDOMNode(selectComponent.refs.menu);
     const menuStyle = window.getComputedStyle(menuNode, null);
     const menuWidth = parseFloat(menuStyle.getPropertyValue('width'));
 
     // In case of a placeholder no option is focused on initially
-    let option;
     let optionIndex;
-
     if (selectComponent.state.selectedValue) {
       optionIndex = findIndexOfSelectedOption(selectComponent);
     } else {
       optionIndex = 0;
     }
-    option = menuNode.children[optionIndex];
+
+    const option = menuNode.childNodes[optionIndex];
 
     const menuHeight = parseFloat(menuStyle.getPropertyValue('height'));
     const menuTopBorderWidth = parseFloat(menuStyle.getPropertyValue('border-top-width'));
 
     // In order to work with legacy browsers the second paramter for pseudoClass
     // has to be provided http://caniuse.com/#feat=getcomputedstyle
-    const optionStyle = window.getComputedStyle(option.children[0], null);
+    const optionStyle = window.getComputedStyle(option.childNodes[0], null);
     const optionPaddingTop = parseFloat(optionStyle.getPropertyValue('padding-top'));
     const optionPaddingLeft = parseFloat(optionStyle.getPropertyValue('padding-top'));
 
-    const selectedOptionWrapperNode = React.findDOMNode(selectComponent.refs.selectedOptionWrapper);
+    const selectedOptionWrapperNode = ReactDOM.findDOMNode(selectComponent.refs.selectedOptionWrapper);
     const selectedOptionWrapperStyle = window.getComputedStyle(selectedOptionWrapperNode, null);
     const selectedOptionWrapperPaddingTop = parseFloat(selectedOptionWrapperStyle.getPropertyValue('padding-top'));
 
@@ -95,7 +97,7 @@ const selectConfig = {
     // - Adding the padding could cause issue with design as it gets wider than
     // the original field.
     menuNode.style.width = `${menuWidth + newLeft * 2}px`;
-  }
+  },
 };
 
 export default selectConfig;

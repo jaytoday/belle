@@ -1,7 +1,7 @@
 {
   "name": "belleExamples",
-  "version": "1.1.1",
-  "description": "Playground for using Belle components",
+  "version": "3.0.2",
+  "description": "Playground for using & developing Belle components",
   "author": {
     "name": "Nik Graf",
     "email": "nik@nikgraf.com",
@@ -13,24 +13,24 @@
     "url": "http://github.com/nikgraf/belle.git"
   },
   "dependencies": {
-    "react": "=0.13.3",
+    "react": "=15.4.1",
+    "react-addons-linked-state-mixin": "^15.4.1",
+    "react-dom": "^15.4.1",
     "underscore": "=1.8.3"
   },
   "devDependencies": {
-    "babelify": "=6.1.2",
-    "browserify": "=10.2.4",
-    "watchify": "=3.2.3"
+    "babel-core": "^6.7.4",
+    "babel-loader": "^6.2.4",
+    "eslint": "^2.5.3",
+    "eslint-config-airbnb": "^6.2.0",
+    "eslint-plugin-react": "^4.2.3",
+    "express": "^4.13.4",
+    "node-libs-browser": "^1.0.0",
+    "react-transform-catch-errors": "^1.0.2",
+    "redbox-react": "^1.2.2",
+    "webpack": "^1.12.14"
   },
   "scripts": {
-    "prestart": "rm -rf ../node_modules/react",
-    "start": "watchify -o js/bundle.js --extension=.jsx -v -d js/app.jsx",
-    "build": "browserify -o js/bundle.js --extension=.jsx .",
-    "postinstall": "ln -snf ../../ node_modules/belle"
-  },
-  "browserify": {
-    "extension": ["jsx"],
-    "transform": [
-      "babelify"
-    ]
+    "start": "node server.js"
   }
 }

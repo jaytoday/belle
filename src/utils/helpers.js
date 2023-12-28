@@ -1,4 +1,4 @@
-// The following helper functions are based on Underscore.js
+import React from 'react';
 
 /**
  * Returns true if the object contain the given key.
@@ -24,8 +24,11 @@ export function omit(obj, fields) {
         result[key] = obj[key];
       }
     }
+
     return result;
   }
+
+  return undefined;
 }
 
 /**
@@ -46,49 +49,72 @@ export function filter(iterable, predicate, context) {
     });
     return result;
   }
+
+  return undefined;
 }
 
 /**
- * Returns true if the provided object is an array.
+ * Returns true if the provided object is an iterable, except for strings for which it will return false.
  *
  * @param {object} obj - object to be inspected
  */
-function isArrayLike(obj) {
+export function isArrayLike(obj) {
+  if (Array.isArray(obj)) return true;
+  if (typeof obj === 'string') return false;
   const length = obj.length;
   return typeof length === 'number' && length >= 0;
 }
 
 /**
- * Returns all the names of the object's properties.
+ * Returns all the names of the object's own properties. This will not include properties inherited through prototypes.
  *
  * @param {object} obj - object to be used
  */
-function keys(obj) {
+export function keys(obj) {
   const objKeys = [];
   for (const key in obj) if (has(obj, key)) objKeys.push(key);
   return objKeys;
 }
 
 /**
- * Returns a new array of values by mapping each value in list through a transformation function (predicate). If object is a not an array, predicate's arguments will be (value, key, list).
+ * Returns a new array of values by mapping each value in list through a transformation function (predicate).
  *
- * @param {object|array} obj - object to be based upon
- * @param {function} predicate - function returning the a new version of the entry
- * @param {object} [context] - context for the predicate function call
+ * @param {array} iterable - source iterable
+ * @param {function} predicate - function returning the transformed array entry
  */
-export function map(obj, predicate, context) {
-  if (obj) {
+export function map(iterable, predicate) {
+  if (iterable) {
     const result = [];
-    const objKeys = !isArrayLike(obj) && keys(obj);
-    const length = (objKeys || obj).length;
-    for (let index = 0; index < length; index++) {
-      const currentKey = objKeys ? objKeys[index] : index;
+    iterable.forEach((elm, index) => {
       if (predicate) {
-        result[index] = predicate.call(context, obj[currentKey], currentKey);
+        result[index] = predicate(elm, index);
       }
-    }
+    });
     return result;
   }
+
+  return undefined;
+}
+
+/**
+ * Returns a new object by mapping each property in an object through a transformation function (predicate).
+ *
+ * @param {object} obj - object to be based upon
+ * @param {function} predicate - function to transform the property
+ */
+export function mapObject(obj, predicate) {
+  if (obj) {
+    const result = [];
+    const objKeys = keys(obj);
+    objKeys.forEach((key, index) => {
+      if (predicate) {
+        result[index] = predicate(obj[key], key);
+      }
+    });
+    return result;
+  }
+
+  return undefined;
 }
 
 /**
@@ -108,17 +134,62 @@ export function find(iterable, predicate, context) {
         break;
       }
     }
+
     return result;
   }
+
+  return undefined;
+}
+
+/**
+ * Reverse the array passed to it.
+ * @param {array} iterable - the array to be reversed.
+ */
+export function reverse(iterable) {
+  if (iterable) {
+    const result = [];
+    for (let index = iterable.length - 1; index >= 0; index--) {
+      result.push(iterable[index]);
+    }
+
+    return result;
+  }
+
+  return undefined;
+}
+
+/**
+ * Shifts given array by given number of positions.
+ * @param {array} iterable - the array to be shifted.
+ * @param {array} positions - number of positions shifting is needed.
+ */
+export function shift(iterable, positions) {
+  if (iterable) {
+    if (positions && positions > 0) {
+      const result = [];
+      const arrayLength = iterable.length;
+      for (let index = 0; index < iterable.length; index++) {
+        result.push(iterable[(index + positions) % arrayLength]);
+      }
+
+      return result;
+    }
+
+    return iterable;
+  }
+
+  return undefined;
 }
 
 /**
  * Returns true if object contains no values (no enumerable own-properties).
  *
- * @param {array} iterable - an iterable object
+ * @param {Object} obj - an object
  */
-export function isEmpty(iterable) {
-  return !iterable || iterable.length === 0;
+export function isEmpty(obj) {
+  return !obj ||
+    (Array.isArray(obj) && obj.length === 0) ||
+    (Object.keys(obj).length === 0);
 }
 
 /**
@@ -138,8 +209,11 @@ export function findIndex(iterable, predicate, context) {
         break;
       }
     }
+
     return result;
   }
+
+  return undefined;
 }
 
 /**
@@ -151,6 +225,8 @@ export function first(iterable) {
   if (iterable && iterable.length > 0) {
     return iterable[0];
   }
+
+  return undefined;
 }
 
 /**
@@ -162,6 +238,8 @@ export function last(iterable) {
   if (iterable && iterable.length > 0) {
     return iterable[iterable.length - 1];
   }
+
+  return undefined;
 }
 
 /**
@@ -173,6 +251,7 @@ export function size(iterable) {
   if (iterable) {
     return iterable.length;
   }
+
   return 0;
 }
 
@@ -192,8 +271,11 @@ export function some(iterable, predicate, context) {
         break;
       }
     }
+
     return result;
   }
+
+  return undefined;
 }
 
 /**
@@ -215,39 +297,8 @@ export function union(...arrs) {
     });
     return result;
   }
-}
 
-let idCounter = 0;
-
-/**
- * Generate a globally-unique id.
- *
- * @param {string} [prefix] - if prefix is passed, the id will be appended to it.
- */
-export function uniqueId(prefix) {
-  const id = ++idCounter + '';
-  return prefix ? prefix + id : id;
-}
-
-/**
- * Copy all of the properties in the source objects over to the destination object, and return the destination object. It's in-order, so the last source will override properties of the same name in previous arguments.
- *
- * @param {object} obj1 - object to be extended
- * @param {...object} objs - at least one but optionally more objects an be provided
- */
-export function extend(obj1, ...objs) {
-  if (obj1 && objs) {
-    objs.forEach((obj) => {
-      if (obj) {
-        for (const key in obj) {
-          if (obj.hasOwnProperty(key)) {
-            obj1[key] = obj[key];
-          }
-        }
-      }
-    });
-  }
-  return obj1;
+  return undefined;
 }
 
 /**
@@ -279,4 +330,61 @@ export function flatten(...arrays) {
     flattenInternal(result, arrays);
     return result;
   }
+
+  return undefined;
+}
+
+/**
+ * Looks through a collection of React children elements, filtering them according to the predicate passed.
+ *
+ * @param {Array/Object} children - colleciton of >=1 react elements
+ * @param {function} predicate - function returning true when provided with an entry as argument
+ */
+export function filterReactChildren(children, predicate) {
+  if (children) {
+    const result = [];
+    React.Children.forEach(children, (entry) => {
+      if (predicate && predicate.call(this, entry)) {
+        result.push(entry);
+      }
+    });
+    return result;
+  }
+
+  return undefined;
+}
+
+/**
+ * Looks through a collection of React children elements, filtering them according to the predicate passed.
+ *
+ * @param {Array/Object} children - collection of >=1 react elements
+ */
+export function getArrayForReactChildren(children) {
+  if (children) {
+    const result = [];
+    React.Children.forEach(children, (entry) => {
+      result.push(entry);
+    });
+    return result;
+  }
+
+  return undefined;
+}
+
+export function flattenReactChildren(children) {
+  if (!isEmpty(children)) {
+    if (Array.isArray(children)) {
+      return flatten(children);
+    }
+
+    return getArrayForReactChildren(children);
+  }
+
+  return undefined;
+}
+
+export function uniqueId() {
+  return Math.floor((1 + Math.random()) * 0x10000)
+    .toString(16)
+    .substring(1);
 }

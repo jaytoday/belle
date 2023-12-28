@@ -6,6 +6,10 @@ Website & Documentation: [http://nikgraf.github.io/belle/](http://nikgraf.github
 
 [<img src="https://cloud.githubusercontent.com/assets/223045/8707250/f77634f8-2b34-11e5-92d1-f0b0fe44ade9.png" width="50%">](http://nikgraf.github.io/belle/)
 
+[![Build Status](https://travis-ci.org/nikgraf/belle.svg)](https://travis-ci.org/nikgraf/belle)
+[![Dependency Status](https://david-dm.org/nikgraf/belle.svg)](https://david-dm.org/nikgraf/belle)
+[![peerDependency Status](https://david-dm.org/nikgraf/belle/peer-status.svg)](https://david-dm.org/nikgraf/belle#info=peerDependencies)
+
 ## Getting Started
 
 Belle is available as [npm](http://npmjs.org) package. Once you have npm you can install Belle in your project folder with:
@@ -16,7 +20,7 @@ npm install belle
 
 ### Import & use Belle Components
 
-We recommend you get started with [React](https://facebook.github.io/react/) first. Once you have a simple application setup you can import any Belle component and use it right away. No stylesheets, font or any other prerequisite needed.
+We recommend you to get started with [React](https://facebook.github.io/react/) first. Once you have a simple application setup you can import any Belle component and use it right away. No stylesheets, font or any other prerequisite needed.
 
 ```html
 <!doctype html>
@@ -38,16 +42,18 @@ We recommend you get started with [React](https://facebook.github.io/react/) fir
 ```javascript
 var React = require('react');
 var belle = require('belle');
-TextInput = belle.TextInput;
+var TextInput = belle.TextInput;
 
 var App = React.createClass({
 
-  render: function () {
-    return <div>
-      <TextInput defaultValue="Update here and see how the input grows …" />
-    </div>;
+  render: function() {
+    return (
+      <div>
+        <TextInput defaultValue="Update here and see how the input grows …" />
+      </div>
+    );
   }
-}
+});
 
 React.render(<App/>, document.getElementById('react-root'));
 ```
@@ -108,7 +114,7 @@ the system.
 
 ### High Performance
 
-The user should see affects of his actions instantly. Any delay can cause confusion
+The user should see affects of their actions instantly. Any delay can cause confusion
 and frustration. While instant certainly is not always possible Belle strives to
 provide an experience close to instant.
 
@@ -120,22 +126,13 @@ You can install the development environment with
 npm install
 ```
 
-Note: In case you want to add a peerDependency please make sure it get's removed
-after running install since peerDependencies should not be in node_modules to
-make them work properly. React & Underscore are removed in the `postinstall`
-script which is defined in `package.json`.
+`npm run build` will trigger a build into the `lib` folder. To develop a component it's convenient to use the examples or docs application.
 
-Whenever you change something in `src/` you can compile it during development with
+### Run the examples or docs application
 
-```
-npm start
-```
+To run the examples or docs you go into the folder `docs` or `examples` and run `npm install` and `npm start`. The app will run with hot reloading on `http://localhost:3000`.
 
 ### Tests
-
-Build Status:
-
-[ ![Codeship Status for nikgraf/belle](https://codeship.com/projects/7650fa30-c483-0132-3f11-46867e328226/status?branch=master)](https://codeship.com/projects/74133)
 
 In order to run the tests use
 
@@ -143,15 +140,9 @@ In order to run the tests use
 npm test
 ```
 
-### Run the examples or docs
-
-To run the examples or docs you should run `npm install` and `npm start` in the examples/docs folder as well.
-
-Use `python -m SimpleHTTPServer 8310` in the examples folder to run it on localhost.
+To run the test continuously you can use `npm run test:watch`.
 
 ## Discussion or need help?
-
-Join us at the **#belle** channel of the [Reactiflux](http://reactiflux.com/) Slack community or our [Gitter room](https://gitter.im/nikgraf/belle).
 
 In addition you can ask the community by [posting your question to StackOverflow with the **belle** tag.](http://stackoverflow.com/questions/ask?tags=belle).
 
@@ -163,13 +154,10 @@ In addition you can ask the community by [posting your question to StackOverflow
 
 Thanks to [Andrey Popp](https://github.com/andreypopp) & [Eugene](https://github.com/eugene1g) for their inspiring work on [React TextArea Autosize](https://github.com/andreypopp/react-textarea-autosize) which kind of ignited the idea of Belle.
 
-Thanks to Christian Steiner from [http://www.cropd.at/](cropd.at) for creating the logo and helping out with the design.
+Thanks to Christian Steiner from [http://www.cropd.at/](http://cropd.at) for creating the logo and helping out with the design.
 
-Special thanks to [https://github.com/jpuri](Jyoti Puri) for the tremendous amount of work she put into this endeavor.
+Special thanks to [Jyoti Puri](https://github.com/jpuri) for the tremendous amount of work she put into this endeavor.
 
 ## License
 
 MIT
-
-This library also contains a copy of the React Software which is licensed under BSD as well
-as a copy of Underscore.js which is licensed under MIT.
